@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gider Defteri</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27%3E%3Crect width=%2716%27 height=%2716%27 rx=%273%27 fill=%27%23305496%27/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js" defer></script>
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <header class="ust">
+    <div class="ust-ic">
+      <div>
+        <div class="ust-baslik">Gider Defteri</div>
+        <div class="ust-alt" id="dernekAdi"></div>
+      </div>
+      <div class="ust-sag" id="kullaniciAlani" hidden>
+        <span id="kullaniciEposta"></span>
+        <button class="btn btn-ince" id="cikisBtn" type="button">Çıkış</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="sayfa">
+    <!-- Ayar eksik -->
+    <section id="ayarEksik" class="kart" hidden>
+      <h2>Kurulum tamamlanmamış</h2>
+      <p><code>config.js</code> dosyasına Supabase adresi ve anahtarı yazılmamış. README dosyasındaki adımları izleyin.</p>
+    </section>
+
+    <!-- Giriş -->
+    <section id="girisEkrani" class="kart giris" hidden>
+      <h2>Giriş</h2>
+      <form id="girisForm" novalidate>
+        <label>E-posta
+          <input type="email" id="girisEposta" autocomplete="username" required>
+        </label>
+        <label>Şifre
+          <input type="password" id="girisSifre" autocomplete="current-password" required>
+        </label>
+        <button class="btn btn-ana" type="submit" id="girisBtn">Giriş yap</button>
+        <p class="hata" id="girisHata" hidden></p>
+      </form>
+    </section>
+
+    <!-- Ana ekran -->
+    <section id="anaEkran" hidden>
+      <div class="arac-cubugu">
+        <label class="yil-sec">Yıl
+          <select id="yilSec"></select>
+        </label>
+        <button class="btn btn-ikincil" id="excelBtn" type="button">Excel İndir</button>
+      </div>
+
+      <form id="kayitForm" class="kart form" novalidate>
+        <h2 id="formBaslik">Yeni Gider</h2>
+        <div class="form-izgara">
+          <label>Tarih
+            <input type="date" id="fTarih" required>
+          </label>
+          <label>Belge Türü
+            <select id="fTur" required>
+              <option>Dekont</option>
+              <option>Fatura</option>
+              <option>Tahakkuk</option>
+              <option>Gider Pusulası</option>
+              <option>Diğer</option>
+            </select>
+          </label>
+          <label class="genis">Açıklama
+            <input type="text" id="fAciklama" maxlength="300" required>
+          </label>
+          <label>Tutar (TL)
+            <input type="text" id="fTutar" inputmode="decimal" placeholder="Örn. 1.250,50" required>
+          </label>
+        </div>
+        <p class="ipucu">Sıra no tarihe göre otomatik verilir.</p>
+        <div class="form-dugmeler">
+          <button class="btn btn-ana" type="submit" id="kaydetBtn">Kaydet</button>
+          <button class="btn btn-ince" type="button" id="iptalBtn" hidden>Vazgeç</button>
+        </div>
+        <p class="hata" id="formHata" hidden></p>
+      </form>
+
+      <div class="kart tablo-kart">
+        <div class="tablo-ust">
+          <h2 id="listeBaslik">Giderler</h2>
+          <input type="search" id="araKutusu" placeholder="Açıklamada ara">
+        </div>
+        <div class="tablo-kap">
+          <table class="tablo">
+            <thead>
+              <tr>
+                <th class="orta">Sıra No</th>
+                <th class="orta">Tarih</th>
+                <th class="orta">Belge Türü</th>
+                <th>Açıklama</th>
+                <th class="sag">Tutar (TL)</th>
+                <th class="islem-sutun"><span class="gizli">İşlem</span></th>
+              </tr>
+            </thead>
+            <tbody id="tabloGovde"></tbody>
+            <tfoot>
+              <tr>
+                <td colspan="4" class="sag" id="toplamEtiket">YIL TOPLAM GİDER</td>
+                <td class="sag" id="toplamTutar">0,00</td>
+                <td></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+        <p class="bos" id="bosMesaj" hidden>Bu yıl için kayıt yok.</p>
+      </div>
+    </section>
+  </main>
+
+  <div class="bildirim" id="bildirim" role="status" aria-live="polite" hidden></div>
+</body>
+</html>
